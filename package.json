@@ -1,9 +1,10 @@
 {
   "name": "styllo",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node src/index.ts",
+    "dev": "tsx src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js"
   },
@@ -21,10 +22,16 @@
   "description": "",
   "devDependencies": {
     "@types/node": "^24.1.0",
+    "@types/qrcode-terminal": "^0.12.2",
     "eslint": "^9.32.0",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.6.2",
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
     "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.7.18",
+    "qrcode-terminal": "^0.12.0"
   }
 }

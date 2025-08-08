@@ -1,1 +1,2 @@
-console.log('Hello Stylo');
+import { createSocket } from "./whatsappClient.js";
+createSocket();
