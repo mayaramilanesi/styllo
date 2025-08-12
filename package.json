@@ -22,7 +22,7 @@
   "homepage": "https://github.com/mayaramilanesi/styllo#readme",
   "description": "",
   "devDependencies": {
-    "@types/node": "^24.1.0",
+    "@types/node": "^24.2.1",
     "@types/qrcode-terminal": "^0.12.2",
     "eslint": "^9.32.0",
     "eslint-config-prettier": "^10.1.8",
