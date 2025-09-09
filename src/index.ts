@@ -1,6 +1,10 @@
 import { createSocket } from "./whatsappClient.js";
 import { startHealthCheck } from "./health.js";
+import "dotenv/config"
 
+if (!process.env.OPENAI_API_KEY) {
+  console.warn("[WARN] OPENAI_API_KEY not set – AI replies will be disabled.")
+}
 async function main() {
   await createSocket();
   startHealthCheck(30 * 60 * 1000);

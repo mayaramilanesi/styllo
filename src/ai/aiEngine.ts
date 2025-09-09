@@ -1,7 +1,6 @@
 import OpenAI from "openai";
 import dotenv from "dotenv";
 
-// Carrega as variáveis de ambiente do arquivo .env
 dotenv.config();
 
 const client = new OpenAI({
@@ -9,13 +8,17 @@ const client = new OpenAI({
 });
 
 export async function generateResponse(context: string, userMsg: string) {
+
+  const ctx = context.slice(0, 600)
+  const msg = userMsg.slice(0, 800)
+
   const messages = [
     {
       role: "system",
       content:
         "You are a helpful personal stylist. Be concise, specific and friendly.",
     },
-    { role: "user", content: `Context: ${context}\nUser: ${userMsg}` },
+    { role: "user", content: `Context: ${ctx}\nUser: ${msg}` },
   ];
 
   const completion = await client.chat.completions.create({

@@ -5,6 +5,7 @@ import {
 } from "@whiskeysockets/baileys";
 import qrcode from "qrcode-terminal";
 
+import { generateResponse } from "./ai/aiEngine.js"
 
 let _connectionStatus: 'connecting' | 'open' | 'close' | 'unknown' = 'unknown'
 
@@ -38,9 +39,49 @@ export async function createSocket() {
 
     if (!msg.message || msg.key.fromMe) return;
     
-    const text = msg.message.conversation ?? "";
+    const text = msg.message.conversation?.trim() ?? ""
+    const jid = msg.key.remoteJid!
+
     if (text.toLowerCase() === "ping") {
-      await sock.sendMessage(msg.key.remoteJid!, { text: "pong" });
+      await sock.sendMessage(jid, { text: "pong" })
+      return
+    }
+
+    if (text.length > 1500) {
+      await sock.sendMessage(jid, {
+        text:
+          "Mensagem muito longa para resposta automática. Pode resumir um pouco? 🙂",
+      })
+      return
+    }
+
+    const context = "User profile: TBD. Prefers concise, practical style tips."
+
+    if (!process.env.OPENAI_API_KEY) {
+      await sock.sendMessage(jid, {
+        text:
+          "No momento estou sem meu motor de IA. Tente novamente em alguns minutos!",
+      })
+      return
+    }
+
+    try {
+      const controller = new AbortController()
+      const timer = setTimeout(() => controller.abort(), 25_000) // 25s
+      const reply = await generateResponse(context, text)
+      clearTimeout(timer)
+
+      const safeReply =
+        reply?.trim() ||
+        "Hmm… não tenho certeza. Pode me dar um pouco mais de contexto?"
+
+      await sock.sendMessage(jid, { text: safeReply })
+    } catch (err: any) {
+      console.error("[AI ERROR]", err?.message || err)
+      await sock.sendMessage(jid, {
+        text:
+          "Tive um probleminha para pensar na resposta agora 😅. Tenta de novo já já.",
+      })
     }
   });
 }
